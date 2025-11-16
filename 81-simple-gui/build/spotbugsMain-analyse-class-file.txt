@@ -1,0 +1,2 @@
+C:\Users\pingu\OneDrive\Documenti\uni\programmazione ad oggetti\oop-lab08\lab08\81-simple-gui\build\classes\java\main\it\unibo\mvc\MiniGUI$1.class
+C:\Users\pingu\OneDrive\Documenti\uni\programmazione ad oggetti\oop-lab08\lab08\81-simple-gui\build\classes\java\main\it\unibo\mvc\MiniGUI.class

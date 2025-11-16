@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeathNoteImp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">82-tdd-deathnote</a> &gt; <a href="index.source.html" class="el_package">it.unibo.deathnote.impl</a> &gt; <span class="el_source">DeathNoteImp.java</span></div><h1>DeathNoteImp.java</h1><pre class="source lang-java linenums">package it.unibo.deathnote.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import it.unibo.deathnote.api.DeathNote;
+
+/**
+ * A DeathNote is a special book intended to be used by Shinigamis (Death gods) to kill humans,
+ * thereby extending their own lives. Each DeathNote has a set of rules that must be followed
+ * in order to use it properly.
+ */
+<span class="fc" id="L15">public class DeathNoteImp implements DeathNote {</span>
+
+    private static final int MININDEX = 1;
+    private static final int MAXINDEX = 14;
+    private static final double TIMED_1 = 40;
+    private static final double TIMED_2 = 6040;
+    private static final String CAUSE0 = &quot;heart attack&quot;;
+<span class="fc" id="L22">    private final Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L23">    private String currentName = &quot;&quot;;</span>
+<span class="fc" id="L24">    private final Victim currentVictim = new Victim();</span>
+
+    /**
+     * Returns the rule with the given number.
+     *
+     * @param ruleNumber the number of the rule to return. The first rule has number one
+     * @return the rule with the given number
+     * @throws IllegalArgumentException if the given rule number is smaller than 1 or larger
+     *     than the number of rules
+     */
+    @Override
+    public String getRule(final int ruleNumber) {
+<span class="pc bpc" id="L36" title="1 of 4 branches missed.">        if (ruleNumber &gt; MAXINDEX || ruleNumber &lt; MININDEX) {</span>
+<span class="fc" id="L37">            throw new IllegalArgumentException(&quot;invalid rule number&quot;);</span>
+        }
+<span class="fc" id="L39">        return this.RULES.get(ruleNumber);</span>
+    }
+
+    /**
+     * The human whose name is written in this DeathNote will die.
+     *
+     * @param name the name of the human to kill
+     * @throws NullPointerException if the given name is null.
+     */
+    @Override
+    public void writeName(final String name) {
+<span class="pc bpc" id="L50" title="2 of 4 branches missed.">        if (name.isEmpty() || name.isBlank()) {</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;invalid name&quot;);</span>
+        }
+<span class="fc" id="L53">        Objects.requireNonNull(name, &quot;invalid name&quot;);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (!isNameWritten(name)) {</span>
+<span class="fc" id="L55">            map.put(name, new ArrayList&lt;&gt;(List.of(CAUSE0, &quot;&quot;)));</span>
+<span class="fc" id="L56">            currentVictim.setTimeWrite(System.currentTimeMillis());</span>
+<span class="fc" id="L57">            currentName = name;</span>
+        }
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * If the cause of death is written within the next 40 milliseconds of writing the person's
+     * name, it will happen.
+     *
+     * @param cause the cause of the human's death
+     * @return true if the cause was written within 40 milliseconds, false otherwise
+     * @throws IllegalStateException if there is no name written in this DeathNote,
+     *     or the cause is null
+     */
+    @Override
+    public boolean writeDeathCause(final String cause) {
+
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        if (!isNameWritten(currentName)) {</span>
+<span class="fc" id="L74">            throw new IllegalStateException(&quot;there is no name written in the deathnote&quot;);</span>
+        }
+
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (-currentVictim.getTimeWrite() + System.currentTimeMillis() &lt;= TIMED_1) {</span>
+<span class="fc" id="L78">            final List&lt;String&gt; tmp = map.get(currentName);</span>
+<span class="fc" id="L79">            tmp.removeFirst();</span>
+<span class="fc" id="L80">            tmp.addFirst(cause);</span>
+<span class="fc" id="L81">            map.replace(currentName, tmp);</span>
+<span class="fc" id="L82">            currentVictim.setTimeCause(System.currentTimeMillis());</span>
+<span class="fc" id="L83">            return true;</span>
+        }
+
+<span class="fc" id="L86">        return false;</span>
+    }
+
+    /**
+     * After writing the cause of death, details of the death should be written in the next
+     * 6 seconds and 40 milliseconds.
+     *
+     * @param details the details of the human's death
+     * @return true if the details were written within 6 seconds and 40 milliseconds, false otherwise
+     * @throws IllegalStateException if there is no name written in this DeathNote,
+     *     or the details are null
+     */
+    @Override
+    public boolean writeDetails(final String details) {
+
+<span class="pc bpc" id="L101" title="1 of 4 branches missed.">        if (!isNameWritten(currentName) || Objects.isNull(details)) {</span>
+<span class="fc" id="L102">            throw new IllegalStateException(&quot;there is no name written in the deathnote&quot;);</span>
+        }
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (System.currentTimeMillis() - currentVictim.getTimeCause() &lt;= TIMED_2) {</span>
+<span class="fc" id="L105">            final List&lt;String&gt; tmp = map.get(currentName);</span>
+<span class="fc" id="L106">            tmp.remove(tmp.getLast());</span>
+<span class="fc" id="L107">            tmp.add(details);</span>
+
+<span class="fc" id="L109">            map.replace(currentName, tmp);</span>
+<span class="fc" id="L110">            return true;</span>
+        }
+<span class="fc" id="L112">        return false;</span>
+    }
+
+    /**
+     * Provides the cause of death of the person with the given name.
+     *
+     * @param name the name of the person whose death cause to return
+     * @return the death cause of the person with the given name.
+     *     If the cause of death is not specified, the method will return &quot;heart attack&quot;.
+     * @throws IllegalArgumentException if the provided name is not written in this DeathNote
+     */
+    @Override
+    public String getDeathCause(final String name) {
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        if (!isNameWritten(name)) {</span>
+<span class="nc" id="L126">            throw new IllegalArgumentException(&quot;the provided name is not written in this DeathNote&quot;);</span>
+        }
+
+<span class="fc" id="L129">        return map.get(name).getFirst();</span>
+    }
+
+    /**
+     * Provides the details of the death of the person with the given name.
+     *
+     * @param name the name of the person whose death cause to return
+     * @return the death details of the person with the given name,
+     *     or an empty string if no details have been provided.
+     * @throws IllegalArgumentException if the provided name is not written in this DeathNote.
+     */
+    @Override
+    public String getDeathDetails(final String name) {
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (!isNameWritten(name)) {</span>
+<span class="nc" id="L143">            throw new IllegalArgumentException(&quot;the provided name is not written in this DeathNote&quot;);</span>
+        }
+<span class="fc" id="L145">        return map.get(name).getLast();</span>
+    }
+
+    /**
+     * Checks if the given name is written in this DeathNote.
+     *
+     * @param name the name of the person
+     * @return true if the given name is written in this DeathNote, false otherwise
+     */
+    @Override
+    public boolean isNameWritten(final String name) {
+<span class="fc" id="L156">        return map.containsKey(name);</span>
+    }
+
+    /**
+     * Inner class representing a victim.
+     */
+<span class="fc" id="L162">    private final class Victim {</span>
+
+        private double timeWritten;
+        private double timeCause;
+
+        void setTimeWrite(final double t) {
+<span class="fc" id="L168">            this.timeWritten = t;</span>
+<span class="fc" id="L169">        }</span>
+
+        void setTimeCause(final double t) {
+<span class="fc" id="L172">            this.timeCause = t;</span>
+<span class="fc" id="L173">        }</span>
+
+        double getTimeCause() {
+<span class="fc" id="L176">            return this.timeCause;</span>
+        }
+
+        double getTimeWrite() {
+<span class="fc" id="L180">            return this.timeWritten;</span>
+        }
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

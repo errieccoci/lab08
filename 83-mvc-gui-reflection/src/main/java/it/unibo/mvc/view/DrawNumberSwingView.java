@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -92,7 +93,7 @@ public final class DrawNumberSwingView implements DrawNumberView {
 
     @Override
     public void setController(final DrawNumberController observer) {
-        this.controller = observer;
+        this.controller = Objects.requireNonNull(observer);
     }
 
     @Override

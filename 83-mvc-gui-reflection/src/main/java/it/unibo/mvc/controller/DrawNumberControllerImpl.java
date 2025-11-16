@@ -4,6 +4,8 @@ import it.unibo.mvc.api.DrawNumber;
 import it.unibo.mvc.api.DrawNumberController;
 import it.unibo.mvc.api.DrawNumberView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Objects;
 public final class DrawNumberControllerImpl implements DrawNumberController {
 
     private final DrawNumber model;
-    private DrawNumberView view;
+    private final List<DrawNumberView> view = new ArrayList<>();
 
     /**
      * Builds a new game controller provided a game model.
@@ -25,19 +27,19 @@ public final class DrawNumberControllerImpl implements DrawNumberController {
     }
 
     @Override
-    public void addView(final DrawNumberView view) {
-        Objects.requireNonNull(view, "Cannot set a null view");
-        if (this.view != null) {
-            throw new IllegalStateException("The view is already set! Multiple views are not supported");
-        }
-        this.view = view;
-        view.setController(this);
-        view.start();
+    public void addView(final DrawNumberView v) {
+        Objects.requireNonNull(v, "Cannot set a null view");
+        this.view.add(v);
+        v.setController(this);
+        v.start();
     }
 
     @Override
     public void newAttempt(final int n) {
-        Objects.requireNonNull(view, "There is no view attached!").result(model.attempt(n));
+        final var res = model.attempt(n);
+        for (final var v : this.view) {
+            Objects.requireNonNull(v, "There is no view attached!").result(res);
+        }
     }
 
     @Override
@@ -53,6 +55,9 @@ public final class DrawNumberControllerImpl implements DrawNumberController {
          * should be paid to alive threads, as the application would continue to persist
          * until the last thread terminates.
          */
+        // for (final var v: this.view) {
+        //     v.close();
+        // }
         System.exit(0);
     }
 

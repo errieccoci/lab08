@@ -1,0 +1,3 @@
+C:\Users\pingu\OneDrive\Documenti\uni\programmazione ad oggetti\oop-lab08\lab08\82-tdd-deathnote\build\classes\java\main\it\unibo\deathnote\api\DeathNote.class
+C:\Users\pingu\OneDrive\Documenti\uni\programmazione ad oggetti\oop-lab08\lab08\82-tdd-deathnote\build\classes\java\main\it\unibo\deathnote\impl\DeathNoteImp$Victim.class
+C:\Users\pingu\OneDrive\Documenti\uni\programmazione ad oggetti\oop-lab08\lab08\82-tdd-deathnote\build\classes\java\main\it\unibo\deathnote\impl\DeathNoteImp.class

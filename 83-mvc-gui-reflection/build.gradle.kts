@@ -1,7 +1,7 @@
 plugins {
     application
     java
-    id("org.danilopianini.gradle-java-qa") version "1.153.0"
+    id("org.danilopianini.gradle-java-qa") version "1.155.0"
 }
 
 repositories {
@@ -10,6 +10,10 @@ repositories {
 
 application {
     mainClass.set("it.unibo.mvc.LaunchApp")
+}
+
+spotbugs {
+    omitVisitors.set(listOf("FindReturnRef", "DumbMethods"))
 }
 
 tasks.javadoc {
